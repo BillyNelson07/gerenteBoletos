@@ -5,7 +5,7 @@ const router = Router();
 
 router.get("/", BoletoController.listar);
 router.get("/:id", BoletoController.buscarPorId);
-router.post("/", BoletoController.criar);
+router.post("/", autenticarToken, boletoController.criar);
 router.put("/:id", BoletoController.atualizar);
 router.delete("/:id", BoletoController.deletar);
 

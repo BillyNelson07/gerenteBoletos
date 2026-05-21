@@ -1,9 +1,0 @@
-feat: initialize project with basic structure and configurations
-
-- Added package.json with dependencies and scripts for the project.
-- Created appConfig.js and databaseConfig.js for application and database configurations.
-- Implemented Boleto and Usuario models with Sequelize ORM.
-- Developed controllers for handling Boleto and Usuario operations.
-- Set up routes for Boleto and Usuario endpoints.
-- Added authentication middleware for JWT verification.
-- Implemented user registration and login services with password hashing and JWT generation.

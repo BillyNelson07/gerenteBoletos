@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize";
-import sequelize from "../index.js";
+import sequelize from "../db.js";
 import Usuario from "./Usuario.js";
 
 const Boleto = sequelize.define(
@@ -59,7 +59,7 @@ const Boleto = sequelize.define(
         }
       },
     },
-  },
+  }
 );
 
 Usuario.hasMany(Boleto, { foreignKey: "usuario_id" });
