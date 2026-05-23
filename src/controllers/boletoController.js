@@ -1,6 +1,12 @@
-import * as boletoService from "../services/boletoService.js";
+import {
+  criarBoleto,
+  carregarTodosOsBoletos,
+  mudarStatusDoBoleto,
+  carregarBoletoPorId,
+  deletarBoleto,
+} from "../services/boletoService.js";
 
-export async function create(req, res) {
+export async function criar(req, res) {
   const dados = req.body;
   if (!dados) {
     return res
@@ -8,7 +14,7 @@ export async function create(req, res) {
       .json({ mensagem: "Requisição ruim", erro: error.message });
   }
   try {
-    const novoBoleto = await boletoService.criarBoleto(dados);
+    const novoBoleto = await criarBoleto(dados);
     return res.status(201).json({
       message: "Boleto criado com sucesso!",
       data: novoBoleto,
@@ -16,10 +22,9 @@ export async function create(req, res) {
   } catch (error) {
     return res.status(400).json({ erro: error.message });
   }
-  //testar em casa
 }
 
-export async function getAll(req, res) {
+export async function carregarTodos(req, res) {
   const token = req.body;
   if (!token) {
     return res
@@ -27,7 +32,7 @@ export async function getAll(req, res) {
       .json({ mensagem: "Requisição ruim", erro: error.message });
   }
   try {
-    const todosOsBoletos = await boletoService.carregarTodosOsBoletos(token);
+    const todosOsBoletos = await carregarTodosOsBoletos(token);
     return res.status(200).json({
       message: "Boletos carregados com sucesso!",
       data: todosOsBoletos,
@@ -35,22 +40,48 @@ export async function getAll(req, res) {
   } catch (error) {
     return res.status(400).json({ erro: error.message });
   }
-  //testar em casa
 }
 
-export async function updateStatus(req, res) {
+export async function carregarPorId(req, res) {
   try {
-    // Supondo que o middleware de autenticação já adicionou req.usuario.id
-    const usuario_id = req.usuario.id;
-    const { status, idBoleto } = req.body;
+    const { usuario_id } = req.body;
+    const { id } = req.params;
+    const dados = { id, usuario_id };
 
-    const dados = { status, idBoleto, usuario_id };
+    const boleto = await carregarBoletoPorId(dados);
+    return res.status(200).json({
+      message: "Boleto carregado com sucesso!",
+      data: boleto,
+    });
+  } catch (error) {
+    return res.status(400).json({ erro: error.message });
+  }
+}
 
-    await boletoService.mudarStatusDoBoleto(dados);
+export async function atualizarStatus(req, res) {
+  try {
+    const { status, usuario_id } = req.body;
+    const { id } = req.params;
+
+    const dados = { status, id, usuario_id };
+
+    await mudarStatusDoBoleto(dados);
 
     return res.status(200).json({ message: "Status atualizado com sucesso!" });
   } catch (error) {
     return res.status(400).json({ erro: error.message });
   }
-  //testar em casa
+}
+
+export async function deletar(req, res) {
+  try {
+    const { id } = req.params;
+    const { usuario_id } = req.body;
+    const dados = { id, usuario_id };
+    await deletarBoleto(dados);
+
+    return res.status(200).json({ message: "Boleto apagado com sucesso!" });
+  } catch (error) {
+    return res.status(400).json({ erro: error.message });
+  }
 }

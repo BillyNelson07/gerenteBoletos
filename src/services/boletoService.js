@@ -31,32 +31,60 @@ export async function criarBoleto({
   });
 
   return novoBoleto;
-
-  //testar em casa
 }
 
-export async function carregarTodosOsBoletos(idUsuario) {
+export async function carregarTodosOsBoletos({ usuario_id }) {
   //"usuario_id" vem do controller , passa pelo middleware para verificar autenteicidade do
   // token e entao é extraido o id do token para ser usado como parametro (idUsuario)
   const todosOsBoletos = await Boleto.findAll({
-    where: { usuario_id: idUsuario },
+    where: { usuario_id },
   });
   return todosOsBoletos;
-  //testar em casa
 }
 
-export async function mudarStatusDoBoleto({ idBoleto, status, usuario_id }) {
-  if (!idBoleto || !status || !usuario_id) {
+export async function carregarBoletoPorId({ id, usuario_id }) {
+  if (!id || !usuario_id) {
+    throw new Error("Dados incompletos!");
+  }
+  const boletoEmQuestao = await Boleto.findOne({ where: { id, usuario_id } });
+
+  if (!boletoEmQuestao) {
+    throw new Error(
+      "O boleto em questão não existe ou não pertence ao usuário!",
+    );
+  }
+
+  return boletoEmQuestao;
+}
+
+export async function deletarBoleto({ id, usuario_id }) {
+  if (!id || !usuario_id) {
+    throw new Error("Dados incompletos!");
+  }
+  const boletoEmQuestao = await Boleto.findOne({ where: { id, usuario_id } });
+
+  if (!boletoEmQuestao) {
+    throw new Error(
+      "O boleto em questão não existe ou não pertence ao usuário!",
+    );
+  }
+
+  await boletoEmQuestao.destroy();
+  return "Boleto apagado!";
+}
+
+export async function mudarStatusDoBoleto({ id, status, usuario_id }) {
+  if (!id || !status || !usuario_id) {
     throw new Error("Dados incompletos!");
   }
 
   const boletoEmQuestao = await Boleto.findOne({
-    where: { id: idBoleto, usuario_id },
+    where: { id, usuario_id },
   });
 
   if (!boletoEmQuestao) {
     throw new Error(
-      "O boleto em questão não existe ou não pertence ao usuário!"
+      "O boleto em questão não existe ou não pertence ao usuário!",
     );
   }
   //boletos cancelados não podem ser marcados com 'pago'
@@ -70,5 +98,4 @@ export async function mudarStatusDoBoleto({ idBoleto, status, usuario_id }) {
 
   await boletoEmQuestao.update({ status });
   return "Boleto atualizado";
-  //testar em casa
 }
