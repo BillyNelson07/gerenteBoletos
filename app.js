@@ -1,7 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import sequelize from "./src/db/db.js";
-// import boletosRouter from "./src/routes/boletos.js";
+import boletosRouter from "./src/routes/boletosRoutes.js";
 import usuariosRouter from "./src/routes/usuariosRoutes.js";
 
 const app = express();
@@ -13,7 +13,7 @@ app.get("/health", (req, res) => {
   res.json({ mensagem: "API de controle de boletos funcionando!" });
 });
 
-// app.use("/boletos", boletosRouter);
+app.use("/boletos", boletosRouter);
 app.use("/usuarios", usuariosRouter);
 
 async function iniciar() {

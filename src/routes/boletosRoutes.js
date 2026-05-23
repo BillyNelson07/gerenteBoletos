@@ -1,12 +1,19 @@
 import { Router } from "express";
-// import BoletoController from "../controllers/boletoController.js";
+import {
+  atualizarStatus,
+  criar,
+  carregarTodos,
+  carregarPorId,
+  deletar,
+} from "../controllers/boletoController.js";
+import { autenticarToken } from "../middlewares/authMiddleware.js";
 
 const router = Router();
 
-router.get("/", BoletoController.listar);
-router.get("/:id", BoletoController.buscarPorId);
-router.post("/", BoletoController.criar);
-router.put("/:id", BoletoController.atualizar);
-router.delete("/:id", BoletoController.deletar);
+router.get("/:id", autenticarToken, carregarPorId);
+router.get("/", autenticarToken, carregarTodos);
+router.post("/", autenticarToken, criar);
+router.put("/:id", autenticarToken, atualizarStatus);
+router.delete("/:id", autenticarToken, deletar);
 
 export default router;
