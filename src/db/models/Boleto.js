@@ -23,11 +23,11 @@ const Boleto = sequelize.define(
       allowNull: false,
     },
     descricao: {
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING,
       allowNull: true,
     },
     valor: {
-      type: DataTypes.DECIMAL(12, 2),
+      type: DataTypes.FLOAT(12, 2),
       allowNull: false,
       validate: {
         min: 0.01,
@@ -59,7 +59,7 @@ const Boleto = sequelize.define(
         }
       },
     },
-  }
+  },
 );
 
 Usuario.hasMany(Boleto, { foreignKey: "usuario_id" });
