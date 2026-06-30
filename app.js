@@ -19,6 +19,7 @@ app.use("/usuarios", usuariosRouter);
 async function iniciar() {
   try {
     await sequelize.authenticate();
+    await sequelize.sync();
     console.log("Banco de dados conectado!");
 
     app.listen(PORT, () => {
